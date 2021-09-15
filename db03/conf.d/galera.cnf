@@ -1,0 +1,52 @@
+[mysqld]
+log_bin	='/var/log/mysql/mariadb-bin'
+binlog_format='row'
+expire_logs_days=1
+#log_error
+
+# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
+# Read the manual for more InnoDB related options. There are many!
+default_storage_engine='InnoDB'
+
+# https://mariadb.com/kb/en/set-transaction/
+transaction-isolation='READ-COMMITTED'
+
+# https://mariadb.com/docs/reference/mdb/cli/mariadbd/innodb-flush-log-at-trx-commit/
+innodb-flush-log-at-trx-commit=1
+
+# https://mariadb.com/docs/reference/mdb/system-variables/innodb_autoinc_lock_mode/
+innodb_autoinc_lock_mode=2
+
+# https://www.digitalocean.com/community/tutorials/how-to-change-a-mariadb-data-directory-to-a-new-location-on-centos-7
+datadir='/var/lib/mysql'
+socket='/run/mysqld/mysqld.sock'
+
+# https://dba.stackexchange.com/questions/130922/error-wsrep-gcs-src-gcs-cppgcs-open1379-failed-to-open-channel-test-clu/131487
+[galera]
+wsrep_on='ON'
+wsrep_provider='/usr/lib/galera/libgalera_smm.so'
+wsrep_cluster_address='gcomm://db00,db01,db02,db03'
+wsrep_cluster_name='my_galera'
+wsrep_sst_method='rsync'
+wsrep_slave_threads=2
+wsrep_node_address='db03'
+
+#wsrep_notify_cmd='/etc/mysql/scripts/my-wsrep-notify.sh'
+#pxc_strict_mode='PERMISSIVE'
+
+# https://qiita.com/chaspy/items/baad6947ae0f8b169868
+wsrep_auto_increment_control='ON'
+wsrep_drupal_282555_workaround='ON'
+wsrep_retry_autocommit=10
+
+#bind-address=0.0.0.0
+#bind-address=127.0.0.1
+#bind_address=*
+
+# https://takapi86.hatenablog.com/entry/2018/12/16/140314
+# https://kamatimaru.hatenablog.com/entry/2020/05/30/023739
+[client]
+protocol='TCP'
+
+#host='127.0.0.1'
+#port=3306

@@ -1,0 +1,144 @@
+# https://hub.docker.com/_/mariadb?tab=description&page=1&ordering=last_updated
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+# https://research.sakura.ad.jp/2013/02/14/mariadb-galera-cluster-1/comment-page-1/
+version: "3.7"
+
+services:
+  db00:
+    #image: mariadb:10.6.4
+    build: ./db00
+    container_name: db00
+    hostname: db00
+    ports:
+      # https://mariadb.com/kb/en/configuring-mariadb-galera-cluster/#network-ports
+      # Standard MariaDB Port (default: 3306) 
+      - 3306:3306
+      # Galera Replication Port (default: 4567) 
+      - 4567:4567
+      # IST Port (default: 4568)
+      - 4568:4568
+      # SST Port (default: 4444)
+      - 4444:4444
+    volumes:
+      - type: volume
+        source: ./db00_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./db00/conf.d/galera.cnf
+        target: /etc/mysql/conf.d/galera.cnf
+      - type: bind
+        source: ./db00/docker-entrypoint-initdb.d/seed.sql
+        target: /docker-entrypoint-initdb.d/seed.sql
+      #- type: bind
+      #  source: ./db00/scripts/bench.sh
+      #  target: /usr/bin/bench
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      #- MARIADB_ROOT_HOST=%
+      #- MARIADB_ROOT_PASSWORD=secret123
+      - MARIADB_DATABASE=demo
+      - MARIADB_INITDB_SKIP_TZINFO=true
+      - TZ=Asia/Tokyo
+    restart: on-failure
+    networks:
+      db_network:
+    command: ["--wsrep-new-cluster"]
+
+  db01:
+    image: mariadb:10.6.4
+    container_name: db01
+    hostname: db01
+    ports:
+      - 13306:3306
+      - 14567:4567
+      - 14568:4568
+      - 14444:4444
+    volumes:
+      - type: volume
+        source: ./db01_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./db01/conf.d/galera.cnf
+        target: /etc/mysql/conf.d/galera.cnf
+      #- type: bind
+      #  source: ./db01/docker-entrypoint-initdb.d/seed.sql
+      #  target: /docker-entrypoint-initdb.d/seed.sql
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      #- MARIADB_ROOT_HOST=%
+      #- MARIADB_ROOT_PASSWORD=secret123
+      - MARIADB_DATABASE=demo
+      - MARIADB_INITDB_SKIP_TZINFO=true
+      - TZ=Asia/Tokyo
+    restart: on-failure
+    networks:
+      db_network:
+
+  db02:
+    image: mariadb:10.6.4
+    container_name: db02
+    hostname: db02
+    ports:
+      - 23306:3306
+      - 24567:4567
+      - 24568:4568
+      - 24444:4444
+    volumes:
+      - type: volume
+        source: ./db02_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./db02/conf.d/galera.cnf
+        target: /etc/mysql/conf.d/galera.cnf
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      #- MARIADB_ROOT_HOST=%
+      #- MARIADB_ROOT_PASSWORD=secret123
+      - MARIADB_DATABASE=demo
+      - MARIADB_INITDB_SKIP_TZINFO=true
+      - TZ=Asia/Tokyo
+    restart: on-failure
+    networks:
+      db_network:
+
+  db03:
+    image: mariadb:10.6.4
+    container_name: db03
+    hostname: db03
+    ports:
+      - 33306:3306
+      - 34567:4567
+      - 34568:4568
+      - 34444:4444
+    volumes:
+      - type: volume
+        source: ./db03_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./db03/conf.d/galera.cnf
+        target: /etc/mysql/conf.d/galera.cnf
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      #- MARIADB_ROOT_HOST=%
+      #- MARIADB_ROOT_PASSWORD=secret123
+      - MARIADB_DATABASE=demo
+      - MARIADB_INITDB_SKIP_TZINFO=true
+      - TZ=Asia/Tokyo
+    restart: on-failure
+    networks:
+      db_network:
+
+
+volumes:
+  db00_data:
+  db01_data:
+  db02_data:
+  db03_data:
+
+networks:
+  db_network:
+    driver: bridge
