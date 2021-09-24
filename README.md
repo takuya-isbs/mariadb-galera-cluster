@@ -109,7 +109,7 @@ error                docker-compose logs | grep [ERROR|WARN|fail] | tail
 bench                docker-compose exec db00 bench
 ```
 
-- Folder structure
+- Directory structure
 ```
 $ tree -L 3
 .
