@@ -29,9 +29,6 @@ services:
       - type: bind
         source: ./db00/docker-entrypoint-initdb.d/seed.sql
         target: /docker-entrypoint-initdb.d/seed.sql
-      #- type: bind
-      #  source: ./db00/scripts/bench.sh
-      #  target: /usr/bin/bench
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes

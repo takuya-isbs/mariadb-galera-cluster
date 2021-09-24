@@ -43,6 +43,7 @@ wsrep_retry_autocommit=10
 #bind-address=127.0.0.1
 #bind_address=*
 
+# Can't connect to MySQL server on '127.0.0.1'
 # https://takapi86.hatenablog.com/entry/2018/12/16/140314
 # https://kamatimaru.hatenablog.com/entry/2020/05/30/023739
 [client]
