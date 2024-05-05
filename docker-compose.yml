@@ -42,7 +42,7 @@ services:
     #command: ["--wsrep-new-cluster"]
 
   db01:
-    image: mariadb:10.6.4
+    build: ./db00
     container_name: db01
     hostname: db01
     init: true
@@ -75,7 +75,7 @@ services:
       db_network:
 
   db02:
-    image: mariadb:10.6.4
+    build: ./db00
     container_name: db02
     hostname: db02
     init: true
@@ -105,7 +105,7 @@ services:
       db_network:
 
   db03:
-    image: mariadb:10.6.4
+    build: ./db00
     container_name: db03
     hostname: db03
     init: true

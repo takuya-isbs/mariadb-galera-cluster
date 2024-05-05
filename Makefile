@@ -59,6 +59,10 @@ down-v: ## make down ## docker compose down -v
 volume-ls:
 	docker volume ls
 
+.PHONY: network-ls
+network-ls:
+	docker network ls
+
 # .PHONY: rmall
 # rmall: ## make rmall ## docker rm -f ${Galera_Cluster_CONTAINERS}
 # 	docker ps -a | grep maria | awk '{print $1}' | xargs docker rm -f

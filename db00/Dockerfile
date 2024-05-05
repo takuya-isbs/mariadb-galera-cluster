@@ -14,4 +14,5 @@ RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/scrip
 RUN apt -y install sysbench
 
 COPY docker-entrypoint-override.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint-override.sh", "docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint-override.sh"]
+CMD ["docker-entrypoint.sh", "mariadbd"]
