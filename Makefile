@@ -9,27 +9,16 @@ help:
 .PHONY: init
 init: ## make init ## はじめて立ち上げるときに使う(1台立ち上げて、--wsrep-new-clusterコマンドを実行してから残りのDBを立ち上げる)
 	$(COMPOSE) build
-	sleep 2
 	make start
 
 .PHONY: start
-start: ## make start ## 2回目以降起動時に使う TODO
+start: ## make start2 ## 自動的にbootstrapを探してから起動
 	$(COMPOSE) up --no-start
-	#TODO ./start.sh  # search 1 from */grastate.dat
-	#TODO sudo cat db00_data/grastate.dat | grep ' 1$$'
-	$(COMPOSE) --env-file ./new-cluster.env up -d db00
-	sleep 1
-	$(COMPOSE) up -d db01 db02 db03
+	./start-galera.sh db00 db01 db02 db03
 
 .PHONY: stop
 stop: ## make stop ## 安全に停止する TODO
-	$(COMPOSE) stop db01
-	sleep 2
-	$(COMPOSE) stop db02
-	sleep 2
-	$(COMPOSE) stop db03
-	sleep 5
-	$(COMPOSE) stop db00
+	./stop-galera.sh db00 db01 db02 db03
 
 .PHONY: ps
 ps: ## make ps ## docker compose ps
