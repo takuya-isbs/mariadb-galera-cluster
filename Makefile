@@ -9,7 +9,13 @@ help:
 .PHONY: init
 init: ## make init ## はじめて立ち上げるときに使う(1台立ち上げて、--wsrep-new-clusterコマンドを実行してから残りのDBを立ち上げる)
 	$(COMPOSE) build
-	make start
+	$(COMPOSE) --env-file ./new-cluster.env up -d db00
+	sleep 2
+	$(COMPOSE) up -d db01 db02 db03
+
+.PHONY: build
+build: ## make build ## 再ビルド
+	$(COMPOSE) build
 
 .PHONY: start
 start: ## make start2 ## 自動的にbootstrapを探してから起動

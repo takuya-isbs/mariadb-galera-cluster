@@ -8,6 +8,7 @@ RUN apt-get update -y \
   apt-utils \
   curl
 
+COPY ./conf.d/galera.cnf.tmpl /galera.cnf.tmpl
 COPY ./scripts/bench.sh /usr/bin/bench
 RUN chmod +x /usr/bin/bench
 RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | bash

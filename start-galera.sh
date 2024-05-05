@@ -24,12 +24,18 @@ select_bootstrap() {
     return 1
 }
 
+recovery() {
+    $COMPOSE run -it --rm "$1" sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/g' /var/lib/mysql/grastate.dat
+}
+
 BOOTSTRAP=$(select_bootstrap "$@")
 if [ "$BOOTSTRAP" = "" ]; then
-    exit 1
+    BOOTSTRAP=db00
+    echo "!!!!!!!!!!! RECOVERY MODE"
+    recovery $BOOTSTRAP
 fi
 
-echo $BOOTSTRAP
+#echo $BOOTSTRAP
 
 $COMPOSE --env-file ./new-cluster.env up -d $BOOTSTRAP
 sleep 2

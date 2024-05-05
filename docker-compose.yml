@@ -22,9 +22,6 @@ services:
         source: data_db00
         target: /var/lib/mysql
       - type: bind
-        source: ./db00/conf.d/galera.cnf
-        target: /etc/mysql/conf.d/galera.cnf
-      - type: bind
         source: ./db00/docker-entrypoint-initdb.d/seed.sql
         target: /docker-entrypoint-initdb.d/seed.sql
     environment:
@@ -55,12 +52,6 @@ services:
       - type: volume
         source: data_db01
         target: /var/lib/mysql
-      - type: bind
-        source: ./db01/conf.d/galera.cnf
-        target: /etc/mysql/conf.d/galera.cnf
-      #- type: bind
-      #  source: ./db01/docker-entrypoint-initdb.d/seed.sql
-      #  target: /docker-entrypoint-initdb.d/seed.sql
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -88,9 +79,9 @@ services:
       - type: volume
         source: data_db02
         target: /var/lib/mysql
-      - type: bind
-        source: ./db02/conf.d/galera.cnf
-        target: /etc/mysql/conf.d/galera.cnf
+      # - type: bind
+      #   source: ./db02/conf.d/galera.cnf
+      #   target: /etc/mysql/conf.d/galera.cnf
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -118,9 +109,6 @@ services:
       - type: volume
         source: data_db03
         target: /var/lib/mysql
-      - type: bind
-        source: ./db03/conf.d/galera.cnf
-        target: /etc/mysql/conf.d/galera.cnf
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
