@@ -12,3 +12,6 @@ COPY ./scripts/bench.sh /usr/bin/bench
 RUN chmod +x /usr/bin/bench
 RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | bash
 RUN apt -y install sysbench
+
+COPY docker-entrypoint-override.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint-override.sh", "docker-entrypoint.sh"]
