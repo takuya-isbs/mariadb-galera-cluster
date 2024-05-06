@@ -21,9 +21,11 @@ services:
       - type: volume
         source: data_db00
         target: /var/lib/mysql
-      - type: bind
-        source: ./db00/docker-entrypoint-initdb.d/seed.sql
-        target: /docker-entrypoint-initdb.d/seed.sql
+      #- type: bind
+      #  source: ./db00/docker-entrypoint-initdb.d/
+      #  target: /docker-entrypoint-initdb.d/
+      - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
+      - ./db00/docker-entrypoint-initdb.d/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -33,7 +35,8 @@ services:
       - MARIADB_DATABASE=demo
       - MARIADB_INITDB_SKIP_TZINFO=true
       - TZ=Asia/Tokyo
-    restart: on-failure
+    #restart: on-failure
+    restart: "no"
     networks:
       db_network:
     #command: ["--wsrep-new-cluster"]
@@ -52,6 +55,7 @@ services:
       - type: volume
         source: data_db01
         target: /var/lib/mysql
+      - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -61,7 +65,8 @@ services:
       - MARIADB_DATABASE=demo
       - MARIADB_INITDB_SKIP_TZINFO=true
       - TZ=Asia/Tokyo
-    restart: on-failure
+    #restart: on-failure
+    restart: "no"
     networks:
       db_network:
 
@@ -79,9 +84,7 @@ services:
       - type: volume
         source: data_db02
         target: /var/lib/mysql
-      # - type: bind
-      #   source: ./db02/conf.d/galera.cnf
-      #   target: /etc/mysql/conf.d/galera.cnf
+      - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -91,7 +94,8 @@ services:
       - MARIADB_DATABASE=demo
       - MARIADB_INITDB_SKIP_TZINFO=true
       - TZ=Asia/Tokyo
-    restart: on-failure
+    #restart: on-failure
+    restart: "no"
     networks:
       db_network:
 
@@ -109,6 +113,7 @@ services:
       - type: volume
         source: data_db03
         target: /var/lib/mysql
+      - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -118,7 +123,8 @@ services:
       - MARIADB_DATABASE=demo
       - MARIADB_INITDB_SKIP_TZINFO=true
       - TZ=Asia/Tokyo
-    restart: on-failure
+    #restart: on-failure
+    restart: "no"
     networks:
       db_network:
 

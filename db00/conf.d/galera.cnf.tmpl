@@ -27,8 +27,16 @@ wsrep_on='ON'
 wsrep_provider='/usr/lib/galera/libgalera_smm.so'
 wsrep_cluster_address='gcomm://db00,db01,db02,db03'
 wsrep_cluster_name='my_galera'
-wsrep_sst_method='rsync'
-wsrep_slave_threads=2
+
+wsrep_sst_auth='mariabackup:mariabackuppass'
+
+### default: rsync
+#wsrep_sst_method='rsync'
+
+### mariabackup: not work?
+#wsrep_sst_method='mariabackup'
+
+wsrep_slave_threads=1
 wsrep_node_address='@wsrep_node_address@'
 
 #wsrep_notify_cmd='/etc/mysql/scripts/my-wsrep-notify.sh'

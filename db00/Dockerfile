@@ -7,12 +7,12 @@ RUN apt-get update -y \
   && apt-get install -y --no-install-recommends \
   apt-utils \
   curl
+RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | bash
+RUN apt -y install sysbench
 
 COPY ./conf.d/galera.cnf.tmpl /galera.cnf.tmpl
 COPY ./scripts/bench.sh /usr/bin/bench
 RUN chmod +x /usr/bin/bench
-RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | bash
-RUN apt -y install sysbench
 
 COPY docker-entrypoint-override.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint-override.sh"]
