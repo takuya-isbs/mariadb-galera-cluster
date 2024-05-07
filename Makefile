@@ -8,9 +8,17 @@ help:
 
 .PHONY: init
 init: ## make init ## はじめて立ち上げるときに使う(1台立ち上げて、--wsrep-new-clusterコマンドを実行してから残りのDBを立ち上げる)
+	make init1
+	sleep 2
+	make init2
+
+.PHONY: init1
+init1:
 	$(COMPOSE) build
 	$(COMPOSE) --env-file ./new-cluster.env up -d db00
-	sleep 2
+
+.PHONY: init2
+init2:
 	$(COMPOSE) up -d db01 db02 db03
 
 .PHONY: build
@@ -38,16 +46,28 @@ logs: ## make logs ## docker compose logs
 logs-f: ## make logs ## docker compose logs
 	$(COMPOSE) logs -f
 
-.PHONY: shell
-shell: ## make logs ## docker compose logs
+.PHONY: shell shell-db00 db00
+shell shell-db00 db00: ## make shell ## shell db00
 	$(COMPOSE) exec db00 bash
+
+.PHONY: shell-db01 db01
+shell-db01 db01: ## make db01 ## shell db01
+	$(COMPOSE) exec db01 bash
+
+.PHONY: shell-db02 db02
+shell-db02 db02: ## make db02 ## shell db02
+	$(COMPOSE) exec db02 bash
+
+.PHONY: shell-db03 db03
+shell-db03 db03: ## make db03 ## shell db03
+	$(COMPOSE) exec db03 bash
 
 .PHONY: down
 down: ## make down ## docker compose down
 	$(COMPOSE) down --remove-orphans
 
 .PHONY: down-v
-down-v: ## make down ## docker compose down -v
+down-v: ## make down-v ## docker compose down -v
 	$(COMPOSE) down -v --remove-orphans
 
 .PHONY: volume-ls
@@ -83,10 +103,30 @@ error: ## make error ## docker compose logs | grep [ERROR|WARN|fail] | tail
 bench: ## make bench ## docker compose exec db00 bench
 	$(COMPOSE) exec db00 bench
 
-.PHONY: backup
-backup:
-	# TODO
-	mkdir -p BACKUP
-	docker compose run --volume `pwd`/BACKUP:/backup --rm db00 mariadb-backup --help
+.PHONY: bench-db01
+bench-db01: ## make bench-db01 ## docker compose exec db01 bench
+	$(COMPOSE) exec db01 bench
 
-#TODO init-from-backup
+.PHONY: backup
+backup: ## make backup ## バックアップ
+	mkdir -p BACKUP
+	DT=$$(date +%Y%m%d-%H%M); \
+	docker compose exec -i db00 \
+	mariadb-dump --all-databases -uroot | gzip > ./BACKUP/backup-$${DT}.sql.gz
+
+.PHONY: restore-init
+restore-init: ## make restore-init ## リストア
+	make init1
+	sh ./wait.sh db00
+	sh ./restore.sh
+	make init2
+
+.PHONY: mariabackup
+mariabackup:
+	# TODO not work:
+	# [00] 2024-05-07 16:39:48 Connecting to MariaDB server host: localhost, user: mariabackup, password: set, port: 3306, socket: /run/mysqld/mysqld.sock
+	# [00] 2024-05-07 16:39:48 Failed to connect to MariaDB server: Access denied for user 'mariabackup'@'::1' (using password: YES).
+	mkdir -p BACKUP
+	docker compose exec db00 \
+	mariabackup -h 127.0.0.1 -P 3306 --protocol=tcp --backup --galera-info --target-dir=/BACKUP \
+            --user=mariabackup --password=pass123

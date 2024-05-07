@@ -26,6 +26,7 @@ services:
       #  target: /docker-entrypoint-initdb.d/
       - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
       - ./db00/docker-entrypoint-initdb.d/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+      #- ./BACKUP:/BACKUP:ro
     environment:
       - WSREP_NEW_CLUSTER=${WSREP_NEW_CLUSTER:-no}
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
