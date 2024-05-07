@@ -12,6 +12,9 @@ if [ $WSREP_NEW_CLUSTER = "yes" ]; then
 fi
 
 sed 's/@wsrep_node_address@/'"$HOSTNAME"'/g' \
-/galera.cnf.tmpl > /etc/mysql/conf.d/galera.cnf
+    /galera.cnf.tmpl > /etc/mysql/conf.d/galera.cnf
+
+# log for debug
+ls -la /var/lib/mysql/
 
 exec "$@"

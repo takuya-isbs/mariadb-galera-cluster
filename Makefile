@@ -42,9 +42,17 @@ ps: ## make ps ## docker compose ps
 logs: ## make logs ## docker compose logs
 	$(COMPOSE) logs
 
+.PHONY: logs-db00
+logs-db00: ## make logs-db00 ## docker compose logs db00
+	$(COMPOSE) logs db00
+
 .PHONY: logs-f
-logs-f: ## make logs ## docker compose logs
+logs-f: ## make logs ## docker compose logs -f
 	$(COMPOSE) logs -f
+
+.PHONY: logs-f-db00
+logs-f-db00: ## make logs-db00 ## docker compose logs -f db00
+	$(COMPOSE) logs -f db00
 
 .PHONY: shell shell-db00 db00
 shell shell-db00 db00: ## make shell ## shell db00
@@ -109,6 +117,7 @@ bench-db01: ## make bench-db01 ## docker compose exec db01 bench
 
 .PHONY: backup
 backup: ## make backup ## バックアップ
+	# REFERENCE: https://mariadb.com/kb/en/container-backup-and-restoration/
 	mkdir -p BACKUP
 	DT=$$(date +%Y%m%d-%H%M); \
 	docker compose exec -i db00 \
