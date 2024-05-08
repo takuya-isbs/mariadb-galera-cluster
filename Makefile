@@ -121,7 +121,7 @@ backup: ## make backup ## バックアップ
 	mkdir -p BACKUP
 	DT=$$(date +%Y%m%d-%H%M); \
 	docker compose exec -i db00 \
-	mariadb-dump --all-databases -uroot | gzip > ./BACKUP/backup-$${DT}.sql.gz
+	mariadb-dump --single-transaction --all-databases -uroot | gzip > ./BACKUP/backup-$${DT}.sql.gz
 
 .PHONY: restore-init
 restore-init: ## make restore-init ## リストア
