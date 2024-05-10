@@ -40,19 +40,19 @@ ps: ## make ps ## docker compose ps
 
 .PHONY: logs
 logs: ## make logs ## docker compose logs
-	$(COMPOSE) logs
+	$(COMPOSE) logs --no-color | sed -r 's/\x1B\[[0-9;]*[a-zA-Z]//g'
 
 .PHONY: logs-db00
 logs-db00: ## make logs-db00 ## docker compose logs db00
-	$(COMPOSE) logs db00
+	$(COMPOSE) logs --no-color db00 | sed -r 's/\x1B\[[0-9;]*[a-zA-Z]//g'
 
 .PHONY: logs-f
 logs-f: ## make logs ## docker compose logs -f
-	$(COMPOSE) logs -f
+	$(COMPOSE) logs -f --no-color | sed -r 's/\x1B\[[0-9;]*[a-zA-Z]//g'
 
 .PHONY: logs-f-db00
 logs-f-db00: ## make logs-db00 ## docker compose logs -f db00
-	$(COMPOSE) logs -f db00
+	$(COMPOSE) logs -f db00 | sed -r 's/\x1B\[[0-9;]*[a-zA-Z]//g'
 
 .PHONY: shell shell-db00 db00
 shell shell-db00 db00: ## make shell ## shell db00
@@ -92,14 +92,15 @@ network-ls:
 
 .PHONY: show-status
 show-status: ## make status ## mysql -u root -e "show status like 'wsrep_cluster_%'"
-	$(COMPOSE) exec db00 mysql -u root -e "show status like 'wsrep_cluster_%'"
-	$(COMPOSE) exec db01 mysql -u root -e "show status like 'wsrep_cluster_%'"
-	$(COMPOSE) exec db02 mysql -u root -e "show status like 'wsrep_cluster_%'"
-	$(COMPOSE) exec db03 mysql -u root -e "show status like 'wsrep_cluster_%'"
-	$(COMPOSE) exec db00 mysql -u root -e "show status like 'wsrep_local_state_%'"
-	$(COMPOSE) exec db01 mysql -u root -e "show status like 'wsrep_local_state_%'"
-	$(COMPOSE) exec db02 mysql -u root -e "show status like 'wsrep_local_state_%'"
-	$(COMPOSE) exec db03 mysql -u root -e "show status like 'wsrep_local_state_%'"
+	$(COMPOSE) exec db00 mysql -u root -e "show status like 'wsrep_cluster_%'" || true
+	$(COMPOSE) exec db01 mysql -u root -e "show status like 'wsrep_cluster_%'" || true
+	$(COMPOSE) exec db02 mysql -u root -e "show status like 'wsrep_cluster_%'" || true
+	$(COMPOSE) exec db03 mysql -u root -e "show status like 'wsrep_cluster_%'" || true
+	$(COMPOSE) exec db00 mysql -u root -e "show status like 'wsrep_local_state_%'" || true
+	$(COMPOSE) exec db01 mysql -u root -e "show status like 'wsrep_local_state_%'" || true
+	$(COMPOSE) exec db02 mysql -u root -e "show status like 'wsrep_local_state_%'" || true
+	$(COMPOSE) exec db03 mysql -u root -e "show status like 'wsrep_local_state_%'" || true
+	$(COMPOSE) exec db00 mysql -u root -e "select user,host from user" mysql
 
 .PHONY: error
 error: ## make error ## docker compose logs | grep [ERROR|WARN|fail] | tail

@@ -24,7 +24,7 @@ services:
       #- type: bind
       #  source: ./db00/docker-entrypoint-initdb.d/
       #  target: /docker-entrypoint-initdb.d/
-      - ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
+      #- ./db00/docker-entrypoint-initdb.d/galera.sql:/docker-entrypoint-initdb.d/galera.sql:ro
       - ./db00/docker-entrypoint-initdb.d/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
       #- ./BACKUP:/BACKUP:ro
     environment:
